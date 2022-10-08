@@ -1,4 +1,4 @@
-package client
+package smobilpay
 
 import (
 	"context"
@@ -10,8 +10,8 @@ import (
 type topupService service
 
 // Get topup items
-func (service *topupService) Get(ctx context.Context, serviceID string) (*[]map[string]interface{}, *Response, error) {
-	request, err := service.client.newRequest(ctx, http.MethodGet, "/200", nil)
+func (service *topupService) Get(ctx context.Context, serviceID string, options ...RequestOption) (*[]map[string]interface{}, *Response, error) {
+	request, err := service.client.newRequest(ctx, options, http.MethodGet, "/200", nil)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -1,4 +1,4 @@
-package client
+package smobilpay
 
 //func TestStatusService_Ok(t *testing.T) {
 //	// Setup

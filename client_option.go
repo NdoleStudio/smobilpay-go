@@ -1,4 +1,4 @@
-package client
+package smobilpay
 
 import (
 	"net/http"

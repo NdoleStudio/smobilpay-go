@@ -1,4 +1,4 @@
-package client
+package smobilpay
 
 import (
 	"net/http"
@@ -72,35 +72,31 @@ func TestWithBaseURL(t *testing.T) {
 }
 
 func TestWithAccessToken(t *testing.T) {
-	t.Run("accessToken is set successfully", func(t *testing.T) {
-		// Setup
-		t.Parallel()
+	// Setup
+	t.Parallel()
 
-		// Arrange
-		config := defaultClientConfig()
-		accessToken := "access-token"
+	// Arrange
+	config := defaultClientConfig()
+	accessToken := "access-token"
 
-		// Act
-		WithAccessToken(accessToken).apply(config)
+	// Act
+	WithAccessToken(accessToken).apply(config)
 
-		// Assert
-		assert.Equal(t, accessToken, config.accessToken)
-	})
+	// Assert
+	assert.Equal(t, accessToken, config.accessToken)
 }
 
 func TestWithAccessSecret(t *testing.T) {
-	t.Run("accessSecret is set successfully", func(t *testing.T) {
-		// Setup
-		t.Parallel()
+	// Setup
+	t.Parallel()
 
-		// Arrange
-		config := defaultClientConfig()
-		accessSecret := "access-secret"
+	// Arrange
+	config := defaultClientConfig()
+	accessSecret := "access-secret"
 
-		// Act
-		WithAccessSecret(accessSecret).apply(config)
+	// Act
+	WithAccessSecret(accessSecret).apply(config)
 
-		// Assert
-		assert.Equal(t, accessSecret, config.accessSecret)
-	})
+	// Assert
+	assert.Equal(t, accessSecret, config.accessSecret)
 }
