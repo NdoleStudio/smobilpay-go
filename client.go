@@ -19,7 +19,7 @@ type service struct {
 	client *Client
 }
 
-// Client is the campay API client.
+// Client is the smobilpay API client.
 // Do not instantiate this client with Client{}. Use the New method instead.
 type Client struct {
 	httpClient   *http.Client
@@ -28,10 +28,10 @@ type Client struct {
 	accessToken  string
 	accessSecret string
 
-	Status *topupService
+	Topup *topupService
 }
 
-// New creates and returns a new campay.Client from a slice of campay.ClientOption.
+// New creates and returns a new *Client from a slice of Option.
 func New(options ...Option) *Client {
 	config := defaultClientConfig()
 
@@ -47,7 +47,7 @@ func New(options ...Option) *Client {
 	}
 
 	client.common.client = client
-	client.Status = (*topupService)(&client.common)
+	client.Topup = (*topupService)(&client.common)
 	return client
 }
 

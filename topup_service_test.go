@@ -1,18 +1,12 @@
 package smobilpay
 
-//func TestStatusService_Ok(t *testing.T) {
-//	// Setup
-//	t.Parallel()
-//
-//	// Arrange
-//	client := New()
-//
-//	// Act
-//	status, response, err := client.Status.Ok(context.Background())
-//
-//	// Assert
-//	assert.Nil(t, err)
-//
-//	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
-//	assert.Equal(t, &HTTPStatus{Code: 200, Description: "OK"}, status)
-//}
+import "testing"
+
+func TestTopupService_GetPackages(t *testing.T) {
+}
+
+func TestTopupService_Quote(t *testing.T) {
+}
+
+func TestTopupService_Collect(t *testing.T) {
+}
