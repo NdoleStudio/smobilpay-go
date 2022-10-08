@@ -163,7 +163,7 @@ func (client *Client) computeHmac(message string) string {
 	log.Println(message)
 	key := []byte(client.accessSecret)
 	h := hmac.New(sha1.New, key)
-	h.Write([]byte(message))
+	_, _ = h.Write([]byte(message))
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
