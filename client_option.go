@@ -26,7 +26,7 @@ func WithHTTPClient(httpClient *http.Client) Option {
 	})
 }
 
-// WithBaseURL set's the base url for the flutterwave API
+// WithBaseURL set's the base url for the smobilpay API
 func WithBaseURL(baseURL string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
 		if baseURL != "" {
@@ -35,12 +35,16 @@ func WithBaseURL(baseURL string) Option {
 	})
 }
 
-// WithDelay sets the delay in milliseconds before a response is gotten.
-// The delay must be > 0 for it to be used.
-func WithDelay(delay int) Option {
+// WithAccessToken sets the access token for the smobilpay api
+func WithAccessToken(accessToken string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
-		if delay > 0 {
-			config.delay = delay
-		}
+		config.accessToken = accessToken
+	})
+}
+
+// WithAccessSecret sets the access secret for the smobilpay api
+func WithAccessSecret(accessSecret string) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.accessSecret = accessSecret
 	})
 }

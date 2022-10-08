@@ -6,13 +6,11 @@ import (
 	"net/http"
 )
 
-// statusService is the API client for the `/` endpoint
-type statusService service
+// topupService is the API client for the `/` endpoint
+type topupService service
 
-// Ok returns the 200 HTTP status Code.
-//
-// API Docs: https://httpstat.us
-func (service *statusService) Ok(ctx context.Context) (*HTTPStatus, *Response, error) {
+// Get topup items
+func (service *topupService) Get(ctx context.Context, serviceID string) (*[]map[string]interface{}, *Response, error) {
 	request, err := service.client.newRequest(ctx, http.MethodGet, "/200", nil)
 	if err != nil {
 		return nil, nil, err
@@ -23,7 +21,7 @@ func (service *statusService) Ok(ctx context.Context) (*HTTPStatus, *Response, e
 		return nil, response, err
 	}
 
-	status := new(HTTPStatus)
+	status := new([]map[string]interface{})
 	if err = json.Unmarshal(*response.Body, status); err != nil {
 		return nil, response, err
 	}

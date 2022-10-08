@@ -1,28 +1,28 @@
-# go-http-client
+# Smobilpay Go SDK
 
-[![Build](https://github.com/NdoleStudio/go-http-client/actions/workflows/main.yml/badge.svg)](https://github.com/NdoleStudio/go-http-client/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/NdoleStudio/go-http-client/branch/main/graph/badge.svg)](https://codecov.io/gh/NdoleStudio/go-http-client)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NdoleStudio/go-http-client/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/NdoleStudio/go-http-client/?branch=main)
-[![Go Report Card](https://goreportcard.com/badge/github.com/NdoleStudio/go-http-client)](https://goreportcard.com/report/github.com/NdoleStudio/go-http-client)
-[![GitHub contributors](https://img.shields.io/github/contributors/NdoleStudio/go-http-client)](https://github.com/NdoleStudio/go-http-client/graphs/contributors)
-[![GitHub license](https://img.shields.io/github/license/NdoleStudio/go-http-client?color=brightgreen)](https://github.com/NdoleStudio/go-http-client/blob/master/LICENSE)
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/NdoleStudio/go-http-client)](https://pkg.go.dev/github.com/NdoleStudio/go-http-client)
+[![Build](https://github.com/NdoleStudio/smobilpay-go/actions/workflows/main.yml/badge.svg)](https://github.com/NdoleStudio/smobilpay-go/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/NdoleStudio/smobilpay-go/branch/main/graph/badge.svg)](https://codecov.io/gh/NdoleStudio/smobilpay-go)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NdoleStudio/smobilpay-go/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/NdoleStudio/smobilpay-go/?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/NdoleStudio/smobilpay-go)](https://goreportcard.com/report/github.com/NdoleStudio/smobilpay-go)
+[![GitHub contributors](https://img.shields.io/github/contributors/NdoleStudio/smobilpay-go)](https://github.com/NdoleStudio/smobilpay-go/graphs/contributors)
+[![GitHub license](https://img.shields.io/github/license/NdoleStudio/smobilpay-go?color=brightgreen)](https://github.com/NdoleStudio/smobilpay-go/blob/master/LICENSE)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/NdoleStudio/smobilpay-go)](https://pkg.go.dev/github.com/NdoleStudio/smobilpay-go)
 
 
-This package provides a generic `go` client template for an HTTP API
+This package provides an unofficial `go` client for the [Smobilpay API](https://apidocs.smobilpay.com/s3papi/index.html)
 
 ## Installation
 
-`go-http-client` is compatible with modern Go releases in module mode, with Go installed:
+`smobilpay-go` is compatible with modern Go releases in module mode, with Go installed:
 
 ```bash
-go get github.com/NdoleStudio/go-http-client
+go get github.com/NdoleStudio/smobilpay-go
 ```
 
 Alternatively the same can be achieved if you use `import` in a package:
 
 ```go
-import "github.com/NdoleStudio/go-http-client"
+import "github.com/NdoleStudio/smobilpay-go"
 ```
 
 
@@ -41,11 +41,11 @@ An instance of the client can be created using `New()`.
 package main
 
 import (
-	"github.com/NdoleStudio/go-http-client"
+	"github.com/NdoleStudio/smobilpay-go"
 )
 
 func main()  {
-	statusClient := client.New(client.WithDelay(200))
+	client := smobilpay.New(smobilpay.WithDelay(200))
 }
 ```
 
@@ -58,20 +58,6 @@ status, response, err := statusClient.Status.Ok(context.Background())
 if err != nil {
     //handle error
 }
-```
-
-### Status Codes
-
-#### `GET /200`: OK
-
-```go
-status, response, err := statusClient.Status.Ok(context.Background())
-
-if err != nil {
-    log.Fatal(err)
-}
-
-log.Println(status.Description) // OK
 ```
 
 ## Testing
