@@ -101,6 +101,6 @@ func TestWithAccessSecret(t *testing.T) {
 		WithAccessSecret(accessSecret).apply(config)
 
 		// Assert
-		assert.Equal(t, accessSecret, config.accessToken)
+		assert.Equal(t, accessSecret, config.accessSecret)
 	})
 }
