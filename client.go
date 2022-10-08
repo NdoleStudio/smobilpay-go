@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -160,7 +159,6 @@ func (client *Client) getAuthHeader(request *http.Request, config *requestConfig
 }
 
 func (client *Client) computeHmac(message string) string {
-	log.Println(message)
 	key := []byte(client.accessSecret)
 	h := hmac.New(sha1.New, key)
 	_, _ = h.Write([]byte(message))

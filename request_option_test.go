@@ -16,7 +16,7 @@ func TestWithTimestamp(t *testing.T) {
 	timestamp := time.Now().Add(1 * time.Hour)
 
 	// Act
-	WithTimestamp(timestamp).apply(config)
+	WithRequestTimestamp(timestamp).apply(config)
 
 	// Assert
 	assert.Equal(t, timestamp, config.timestamp)
@@ -31,7 +31,7 @@ func TestWithNonce(t *testing.T) {
 	timestamp := time.Now().Add(1 * time.Hour)
 
 	// Act
-	WithTimestamp(timestamp).apply(config)
+	WithRequestTimestamp(timestamp).apply(config)
 
 	// Assert
 	assert.Equal(t, timestamp, config.timestamp)
