@@ -2,8 +2,6 @@ package smobilpay
 
 import (
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 // QuoteParams is the input needed to initialize a transaction
@@ -59,8 +57,6 @@ func (params *CollectParams) toPayload() map[string]string {
 	if params.ExternalTransactionID != nil {
 		payload["trid"] = *params.ExternalTransactionID
 	}
-
-	spew.Dump(payload)
 
 	return payload
 }

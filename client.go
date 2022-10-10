@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -113,13 +114,13 @@ func (client *Client) newRequest(ctx context.Context, options []RequestOption, m
 }
 
 func (client *Client) authPayload(request *http.Request, body map[string]string) map[string]string {
-	if request.Method != http.MethodGet {
-		return body
-	}
-
 	payload := map[string]string{}
 	for key, value := range request.URL.Query() {
 		payload[key] = value[0]
+	}
+
+	for key, value := range body {
+		payload[key] = value
 	}
 
 	return payload
@@ -142,10 +143,26 @@ func (client *Client) getPayloadHmacAuthString(config *requestConfig, payload ma
 	params.Add("s3pAuth_timestamp", config.timestampString())
 	params.Add("s3pAuth_token", client.accessToken)
 	for key, value := range payload {
-		params.Add(key, value)
+		params.Add(key, strings.TrimSpace(value))
 	}
 
-	return params.Encode()
+	keys := make([]string, 0, len(params))
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	var buf strings.Builder
+	for _, k := range keys {
+		if buf.Len() > 0 {
+			buf.WriteByte('&')
+		}
+		buf.WriteString(k)
+		buf.WriteByte('=')
+		buf.WriteString(params[k][0])
+	}
+
+	return buf.String()
 }
 
 func (client *Client) getAuthHeader(request *http.Request, config *requestConfig, payload map[string]string) string {
