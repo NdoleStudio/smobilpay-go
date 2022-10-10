@@ -136,16 +136,7 @@ func (client *Client) getBaseHmacAuthString(request *http.Request) string {
 	)
 }
 
-func (client *Client) getPayloadHmacAuthString(config *requestConfig, payload map[string]string) string {
-	params := url.Values{}
-	params.Add("s3pAuth_nonce", config.nonce)
-	params.Add("s3pAuth_signature_method", "HMAC-SHA1")
-	params.Add("s3pAuth_timestamp", config.timestampString())
-	params.Add("s3pAuth_token", client.accessToken)
-	for key, value := range payload {
-		params.Add(key, strings.TrimSpace(value))
-	}
-
+func (client *Client) urlEncode(params url.Values) string {
 	keys := make([]string, 0, len(params))
 	for k := range params {
 		keys = append(keys, k)
@@ -163,6 +154,20 @@ func (client *Client) getPayloadHmacAuthString(config *requestConfig, payload ma
 	}
 
 	return buf.String()
+}
+
+func (client *Client) getPayloadHmacAuthString(config *requestConfig, payload map[string]string) string {
+	params := url.Values{}
+	params.Add("s3pAuth_nonce", config.nonce)
+	params.Add("s3pAuth_signature_method", "HMAC-SHA1")
+	params.Add("s3pAuth_timestamp", config.timestampString())
+	params.Add("s3pAuth_token", client.accessToken)
+
+	for key, value := range payload {
+		params.Add(key, strings.TrimSpace(value))
+	}
+
+	return client.urlEncode(params)
 }
 
 func (client *Client) getAuthHeader(request *http.Request, config *requestConfig, payload map[string]string) string {
