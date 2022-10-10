@@ -36,7 +36,7 @@ func (service *topupService) GetPackages(ctx context.Context, serviceID string, 
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (service *topupService) Quote(ctx context.Context, params *QuoteParams, options ...RequestOption) (*Quote, *Response, error) {
-	request, err := service.client.newRequest(ctx, options, http.MethodPost, fmt.Sprintf("/quotestd"), map[string]string{
+	request, err := service.client.newRequest(ctx, options, http.MethodPost, "/quotestd", map[string]string{
 		"payItemId": params.PayItemID,
 		"amount":    params.Amount,
 	})
@@ -61,7 +61,7 @@ func (service *topupService) Quote(ctx context.Context, params *QuoteParams, opt
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (service *topupService) Collect(ctx context.Context, params *CollectParams, options ...RequestOption) (*map[string]interface{}, *Response, error) {
-	request, err := service.client.newRequest(ctx, options, http.MethodPost, fmt.Sprintf("/collectstd"), params.toPayload())
+	request, err := service.client.newRequest(ctx, options, http.MethodPost, "/collectstd", params.toPayload())
 	if err != nil {
 		return nil, nil, err
 	}
