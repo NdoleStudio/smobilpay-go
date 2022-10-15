@@ -222,6 +222,35 @@ func TestClient_Verify(t *testing.T) {
 	server.Close()
 }
 
+func TestClient_TransactionHistory(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServer(http.StatusOK, stubs.VerifyOk())
+	accessToken := "6B352110-4716-11ED-963F-0800200C9A66"
+	client := New(
+		WithBaseURL(server.URL),
+		WithAccessToken(accessToken),
+		WithAccessSecret("1B875FB0-4717-11ED-963F-0800200C9A66"),
+	)
+	paymentTransactionNumber := "99999166542651400095315364801168"
+
+	// Act
+	transactions, response, err := client.TransactionHistory(context.Background(), time.Now(), time.Now())
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+	assert.Equal(t, 1, len(transactions))
+	assert.Equal(t, paymentTransactionNumber, transactions[0].PaymentTransactionNumber)
+	assert.False(t, transactions[0].IsFailed())
+	assert.Equal(t, "SUCCESS", transactions[0].Status)
+
+	// Teardown
+	server.Close()
+}
+
 func TestClient_VerifyEmpty(t *testing.T) {
 	// Setup
 	t.Parallel()
