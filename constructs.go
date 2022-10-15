@@ -84,3 +84,8 @@ type Transaction struct {
 func (transaction *Transaction) IsFailed() bool {
 	return transaction.Status == "ERRORED" || transaction.Status == "ERROREDREFUNDED"
 }
+
+// IsPending checks if a transaction is pending
+func (transaction *Transaction) IsPending() bool {
+	return transaction.Status == "PENDING" || transaction.Status == "INPROCESS"
+}

@@ -124,6 +124,32 @@ func (client *Client) Collect(ctx context.Context, params *CollectParams, option
 	return transaction, response, nil
 }
 
+// CollectSync confirms a transaction in sync by retrying every 15 seconds for 5 minutes
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (client *Client) CollectSync(ctx context.Context, params *CollectParams, options ...RequestOption) (*Transaction, *Response, error) {
+	transaction, response, err := client.Collect(ctx, params, options...)
+	if err != nil {
+		return transaction, response, err
+	}
+
+	if !transaction.IsPending() {
+		return transaction, response, err
+	}
+
+	// wait for completion in 5 minutes
+	number := transaction.PaymentTransactionNumber
+	counter := 1
+	for {
+		time.Sleep(15 * time.Second)
+		transaction, response, err = client.Verify(ctx, number)
+		if err != nil || !transaction.IsPending() || ctx.Err() != nil || counter == 20 {
+			return transaction, response, err
+		}
+		counter++
+	}
+}
+
 // Verify gets the current collection status
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
