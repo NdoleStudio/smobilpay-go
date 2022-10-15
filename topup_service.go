@@ -13,7 +13,7 @@ type topupService service
 // GetPackages returns a list of all available topup packages.
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
-func (service *topupService) GetPackages(ctx context.Context, serviceID string, options ...RequestOption) (*[]TopupPackage, *Response, error) {
+func (service *topupService) GetPackages(ctx context.Context, serviceID string, options ...RequestOption) ([]*TopupPackage, *Response, error) {
 	request, err := service.client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/topup?serviceid=%s", serviceID), nil)
 	if err != nil {
 		return nil, nil, err
@@ -24,8 +24,8 @@ func (service *topupService) GetPackages(ctx context.Context, serviceID string, 
 		return nil, response, err
 	}
 
-	packages := new([]TopupPackage)
-	if err = json.Unmarshal(*response.Body, packages); err != nil {
+	var packages []*TopupPackage
+	if err = json.Unmarshal(*response.Body, &packages); err != nil {
 		return nil, response, err
 	}
 
@@ -60,7 +60,7 @@ func (service *topupService) Quote(ctx context.Context, params *QuoteParams, opt
 // Collect confirms the airtime topup transaction
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
-func (service *topupService) Collect(ctx context.Context, params *CollectParams, options ...RequestOption) (*map[string]interface{}, *Response, error) {
+func (service *topupService) Collect(ctx context.Context, params *CollectParams, options ...RequestOption) (*Transaction, *Response, error) {
 	request, err := service.client.newRequest(ctx, options, http.MethodPost, "/collectstd", params.toPayload())
 	if err != nil {
 		return nil, nil, err
@@ -71,10 +71,36 @@ func (service *topupService) Collect(ctx context.Context, params *CollectParams,
 		return nil, response, err
 	}
 
-	packages := new(map[string]interface{})
-	if err = json.Unmarshal(*response.Body, packages); err != nil {
+	transaction := new(Transaction)
+	if err = json.Unmarshal(*response.Body, transaction); err != nil {
 		return nil, response, err
 	}
 
-	return packages, response, nil
+	return transaction, response, nil
+}
+
+// Verify gets the current payment collection status
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (service *topupService) Verify(ctx context.Context, paymentTransactionNumber string, options ...RequestOption) (*Transaction, *Response, error) {
+	request, err := service.client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/verifytx?ptn=%s", paymentTransactionNumber), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	var transactions []Transaction
+	if err = json.Unmarshal(*response.Body, &transactions); err != nil {
+		return nil, response, err
+	}
+
+	if len(transactions) == 0 {
+		return nil, response, fmt.Errorf("cannot verify transaction with payment transaction number [%s]", paymentTransactionNumber)
+	}
+
+	return &transactions[0], response, nil
 }

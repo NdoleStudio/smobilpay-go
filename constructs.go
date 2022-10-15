@@ -25,14 +25,14 @@ type Quote struct {
 
 // CollectParams is the input needed to confirm a transaction
 type CollectParams struct {
-	QuoteID               string  `json:"quoteId"`
-	CustomerPhoneNumber   string  `json:"customerPhonenumber"`
-	CustomerEmailAddress  string  `json:"customerEmailaddress"`
-	CustomerName          *string `json:"customerName"`
-	CustomerAddress       *string `json:"customerAddress"`
-	CustomerNumber        *string `json:"customerNumber"`
-	ServiceNumber         *string `json:"serviceNumber"`
-	ExternalTransactionID *string `json:"trid"`
+	QuoteID               string `json:"quoteId"`
+	CustomerPhoneNumber   string `json:"customerPhonenumber"`
+	CustomerEmailAddress  string `json:"customerEmailaddress"`
+	CustomerName          string `json:"customerName"`
+	CustomerAddress       string `json:"customerAddress"`
+	CustomerNumber        string `json:"customerNumber"`
+	ServiceNumber         string `json:"serviceNumber"`
+	ExternalTransactionID string `json:"trid"`
 }
 
 func (params *CollectParams) toPayload() map[string]string {
@@ -42,21 +42,44 @@ func (params *CollectParams) toPayload() map[string]string {
 		"customerEmailaddress": params.CustomerEmailAddress,
 	}
 
-	if params.CustomerName != nil {
-		payload["customerName"] = *params.CustomerName
+	if params.CustomerName != "" {
+		payload["customerName"] = params.CustomerName
 	}
 
-	if params.CustomerAddress != nil {
-		payload["customerAddress"] = *params.CustomerAddress
+	if params.CustomerAddress != "" {
+		payload["customerAddress"] = params.CustomerAddress
 	}
 
-	if params.ServiceNumber != nil {
-		payload["serviceNumber"] = *params.ServiceNumber
+	if params.ServiceNumber != "" {
+		payload["serviceNumber"] = params.ServiceNumber
 	}
 
-	if params.ExternalTransactionID != nil {
-		payload["trid"] = *params.ExternalTransactionID
+	if params.ExternalTransactionID != "" {
+		payload["trid"] = params.ExternalTransactionID
 	}
 
 	return payload
+}
+
+// Transaction represents a transaction
+type Transaction struct {
+	PaymentTransactionNumber string      `json:"ptn"`
+	Timestamp                time.Time   `json:"timestamp"`
+	AgentBalance             string      `json:"agentBalance"`
+	ReceiptNumber            string      `json:"receiptNumber"`
+	VerificationCode         string      `json:"veriCode"`
+	PriceLocalCurrency       string      `json:"priceLocalCur"`
+	PriceSystemCurrency      string      `json:"priceSystemCur"`
+	LocalCurrency            string      `json:"localCur"`
+	SystemCurrency           string      `json:"systemCur"`
+	ExternalTransactionID    *string     `json:"trid"`
+	Pin                      interface{} `json:"pin"`
+	Status                   string      `json:"status"`
+	PayItemDescription       *string     `json:"payItemDescr"`
+	PayItemID                string      `json:"payItemId"`
+}
+
+// IsFailed checks if a transaction failed
+func (transaction *Transaction) IsFailed() bool {
+	return transaction.Status == "ERRORED" || transaction.Status == "ERROREDREFUNDED"
 }

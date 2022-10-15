@@ -41,3 +41,8 @@ func MakeRequestCapturingTestServer(responseCode int, response []byte, request *
 		}
 	}))
 }
+
+// StringToPointer converts a string to a pointer
+func StringToPointer(value string) *string {
+	return &value
+}
