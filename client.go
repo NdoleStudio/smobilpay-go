@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"sort"
 	"strings"
+	"time"
 )
 
 type service struct {
@@ -76,7 +77,7 @@ func (client *Client) Ping(ctx context.Context, options ...RequestOption) (*Ping
 	return status, response, nil
 }
 
-// Quote initializes the bill transaction
+// Quote initializes a transaction
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (client *Client) Quote(ctx context.Context, params *QuoteParams, options ...RequestOption) (*Quote, *Response, error) {
@@ -101,7 +102,7 @@ func (client *Client) Quote(ctx context.Context, params *QuoteParams, options ..
 	return packages, response, nil
 }
 
-// Collect confirms the airtime topup transaction
+// Collect confirms a transaction
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (client *Client) Collect(ctx context.Context, params *CollectParams, options ...RequestOption) (*Transaction, *Response, error) {
@@ -123,7 +124,7 @@ func (client *Client) Collect(ctx context.Context, params *CollectParams, option
 	return transaction, response, nil
 }
 
-// Verify gets the current payment collection status
+// Verify gets the current collection status
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (client *Client) Verify(ctx context.Context, paymentTransactionNumber string, options ...RequestOption) (*Transaction, *Response, error) {
@@ -137,7 +138,7 @@ func (client *Client) Verify(ctx context.Context, paymentTransactionNumber strin
 		return nil, response, err
 	}
 
-	var transactions []Transaction
+	var transactions []*Transaction
 	if err = json.Unmarshal(*response.Body, &transactions); err != nil {
 		return nil, response, err
 	}
@@ -146,7 +147,34 @@ func (client *Client) Verify(ctx context.Context, paymentTransactionNumber strin
 		return nil, response, fmt.Errorf("cannot verify transaction with payment transaction number [%s]", paymentTransactionNumber)
 	}
 
-	return &transactions[0], response, nil
+	return transactions[0], response, nil
+}
+
+// TransactionHistory gets the history of transactions
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (client *Client) TransactionHistory(ctx context.Context, from time.Time, to time.Time, options ...RequestOption) ([]*Transaction, *Response, error) {
+	request, err := client.newRequest(
+		ctx,
+		options,
+		http.MethodGet, fmt.Sprintf("/historystd?timestamp_from=%s&timestamp_to=%s", from.Format("2006-01-02T15:04:05.999Z"), to.Format("2006-01-02T15:04:05.999Z")),
+		nil,
+	)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	var transactions []*Transaction
+	if err = json.Unmarshal(*response.Body, &transactions); err != nil {
+		return nil, response, err
+	}
+
+	return transactions, response, nil
 }
 
 func (client *Client) makeRequestConfig(options []RequestOption) *requestConfig {

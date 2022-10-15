@@ -28,8 +28,16 @@ import "github.com/NdoleStudio/smobilpay-go"
 
 ## Implemented
 
-- [Status Codes](#status-codes)
-    - `GET /200`: OK
+- **Client**
+  - `GET /ping`:  API Healthcheck endpoint
+  - `GET /verifytx`: Get the current collection status
+  - `GET /historystd`: Get the transaction history
+  - `POST /quotestd`: Initializes a transaction
+  - `POST /collectstd`: Confirms a transaction
+- **Bill**
+  - `GET /bill`: Get details of a bill
+- **Topup**
+  - `GET /topup`: Get available topup packages.
 
 ## Usage
 
@@ -45,7 +53,10 @@ import (
 )
 
 func main()  {
-	client := smobilpay.New(smobilpay.WithDelay(200))
+  client := smobilpay.New(
+    smobilpay.WithAccessToken(accessToken),
+    smobilpay.WithAccessSecret(accessSecret),
+  )
 }
 ```
 
@@ -54,7 +65,7 @@ func main()  {
 All API calls return an `error` as the last return object. All successful calls will return a `nil` error.
 
 ```go
-status, response, err := statusClient.Status.Ok(context.Background())
+status, response, err := client.Ping(context.Background())
 if err != nil {
     //handle error
 }
