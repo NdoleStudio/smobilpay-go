@@ -30,6 +30,7 @@ type Client struct {
 	accessSecret string
 
 	Topup *topupService
+	Bill  *billService
 }
 
 // New creates and returns a new *Client from a slice of Option.
@@ -49,6 +50,7 @@ func New(options ...Option) *Client {
 
 	client.common.client = client
 	client.Topup = (*topupService)(&client.common)
+	client.Bill = (*billService)(&client.common)
 	return client
 }
 
@@ -72,6 +74,79 @@ func (client *Client) Ping(ctx context.Context, options ...RequestOption) (*Ping
 	}
 
 	return status, response, nil
+}
+
+// Quote initializes the bill transaction
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (client *Client) Quote(ctx context.Context, params *QuoteParams, options ...RequestOption) (*Quote, *Response, error) {
+	request, err := client.newRequest(ctx, options, http.MethodPost, "/quotestd", map[string]string{
+		"payItemId": params.PayItemID,
+		"amount":    params.Amount,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	packages := new(Quote)
+	if err = json.Unmarshal(*response.Body, packages); err != nil {
+		return nil, response, err
+	}
+
+	return packages, response, nil
+}
+
+// Collect confirms the airtime topup transaction
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (client *Client) Collect(ctx context.Context, params *CollectParams, options ...RequestOption) (*Transaction, *Response, error) {
+	request, err := client.newRequest(ctx, options, http.MethodPost, "/collectstd", params.toPayload())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	transaction := new(Transaction)
+	if err = json.Unmarshal(*response.Body, transaction); err != nil {
+		return nil, response, err
+	}
+
+	return transaction, response, nil
+}
+
+// Verify gets the current payment collection status
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
+func (client *Client) Verify(ctx context.Context, paymentTransactionNumber string, options ...RequestOption) (*Transaction, *Response, error) {
+	request, err := client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/verifytx?ptn=%s", paymentTransactionNumber), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	var transactions []Transaction
+	if err = json.Unmarshal(*response.Body, &transactions); err != nil {
+		return nil, response, err
+	}
+
+	if len(transactions) == 0 {
+		return nil, response, fmt.Errorf("cannot verify transaction with payment transaction number [%s]", paymentTransactionNumber)
+	}
+
+	return &transactions[0], response, nil
 }
 
 func (client *Client) makeRequestConfig(options []RequestOption) *requestConfig {

@@ -1,7 +1,7 @@
 package smobilpay
 
-// TopupPackage represents a network where we can buy airtime credit
-type TopupPackage struct {
+// Topup represents a network where we can buy airtime credit
+type Topup struct {
 	ServiceID           string      `json:"serviceid"`
 	Merchant            string      `json:"merchant"`
 	PayItemID           string      `json:"payItemId"`

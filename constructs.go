@@ -68,6 +68,7 @@ type Transaction struct {
 	AgentBalance             string      `json:"agentBalance"`
 	ReceiptNumber            string      `json:"receiptNumber"`
 	VerificationCode         string      `json:"veriCode"`
+	ClearingDate             string      `json:"clearingDate"`
 	PriceLocalCurrency       string      `json:"priceLocalCur"`
 	PriceSystemCurrency      string      `json:"priceSystemCur"`
 	LocalCurrency            string      `json:"localCur"`
