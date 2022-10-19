@@ -141,9 +141,9 @@ func (client *Client) CollectSync(ctx context.Context, params *CollectParams, op
 	number := transaction.PaymentTransactionNumber
 	counter := 1
 	for {
-		time.Sleep(15 * time.Second)
+		time.Sleep(20 * time.Second)
 		transaction, response, err = client.Verify(ctx, number)
-		if err != nil || !transaction.IsPending() || ctx.Err() != nil || counter == 20 {
+		if err != nil || !transaction.IsPending() || ctx.Err() != nil || counter == 15 {
 			return transaction, response, err
 		}
 		counter++
