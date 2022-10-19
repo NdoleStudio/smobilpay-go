@@ -3,6 +3,7 @@ package smobilpay
 import (
 	"net/http"
 	"strings"
+	"time"
 )
 
 // Option is options for constructing a client
@@ -46,5 +47,19 @@ func WithAccessToken(accessToken string) Option {
 func WithAccessSecret(accessSecret string) Option {
 	return clientOptionFunc(func(config *clientConfig) {
 		config.accessSecret = accessSecret
+	})
+}
+
+// WithCollectSyncVerifyInterval sets the interval for calling the `/verifytx` endpoint to check the status of pending transactions
+func WithCollectSyncVerifyInterval(interval time.Duration) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.collectSyncVerifyInterval = interval
+	})
+}
+
+// WithCollectSyncVerifyRetryCount sets the number of retries for calling the `/verifytx` endpoint to check the status of pending transactions
+func WithCollectSyncVerifyRetryCount(retryCount uint) Option {
+	return clientOptionFunc(func(config *clientConfig) {
+		config.collectSyncVerifyRetryCount = retryCount
 	})
 }

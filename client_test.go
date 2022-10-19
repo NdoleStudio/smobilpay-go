@@ -189,6 +189,138 @@ func TestClient_Collect(t *testing.T) {
 	server.Close()
 }
 
+func TestClient_CollectSync(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServerWithMultipleResponses(http.StatusOK, [][]byte{
+		stubs.CollectPending(),
+		stubs.VerifyInProcess(),
+		stubs.VerifyOk(),
+	})
+	verifyInterval := 100 * time.Millisecond
+	accessToken := "6B352110-4716-11ED-963F-0800200C9A66"
+	client := New(
+		WithBaseURL(server.URL),
+		WithCollectSyncVerifyInterval(verifyInterval),
+		WithAccessToken(accessToken),
+		WithAccessSecret("1B875FB0-4717-11ED-963F-0800200C9A66"),
+	)
+	nonce := "95cdf110-4614-4d95-b6c2-f14fe01c4995"
+	params := &CollectParams{
+		QuoteID:               "15380e55-6227-4a25-8e1f-23c8735ce242",
+		CustomerPhoneNumber:   "697777777",
+		CustomerEmailAddress:  "dev@test.com",
+		ServiceNumber:         "697777777",
+		ExternalTransactionID: "999992624813740205",
+	}
+
+	// Act
+	start := time.Now()
+	transaction, response, err := client.CollectSync(
+		context.Background(),
+		params,
+		WithRequestNonce(nonce),
+	)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+	assert.Equal(t, params.ExternalTransactionID, *transaction.ExternalTransactionID)
+	assert.False(t, transaction.IsFailed())
+	assert.Equal(t, "SUCCESS", transaction.Status)
+	assert.GreaterOrEqual(t, time.Since(start), 2*verifyInterval)
+
+	// Teardown
+	server.Close()
+}
+
+func TestClient_CollectSyncWithContextTimeout(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServerWithMultipleResponses(http.StatusOK, [][]byte{
+		stubs.CollectPending(),
+		stubs.VerifyInProcess(),
+		stubs.VerifyOk(),
+	})
+
+	accessToken := "6B352110-4716-11ED-963F-0800200C9A66"
+	client := New(
+		WithBaseURL(server.URL),
+		WithAccessToken(accessToken),
+		WithAccessSecret("1B875FB0-4717-11ED-963F-0800200C9A66"),
+	)
+	nonce := "95cdf110-4614-4d95-b6c2-f14fe01c4995"
+	params := &CollectParams{
+		QuoteID:               "15380e55-6227-4a25-8e1f-23c8735ce242",
+		CustomerPhoneNumber:   "697777777",
+		CustomerEmailAddress:  "dev@test.com",
+		ServiceNumber:         "697777777",
+		ExternalTransactionID: "999992624813740205",
+	}
+	ctxTimeout := 50 * time.Millisecond
+	ctx, cancel := context.WithTimeout(context.Background(), ctxTimeout)
+	start := time.Now()
+	defer cancel()
+
+	// Act
+	_, _, err := client.CollectSync(
+		ctx,
+		params,
+		WithRequestNonce(nonce),
+	)
+
+	// Assert
+	assert.NotNil(t, err)
+	assert.LessOrEqual(t, time.Since(start), 2*ctxTimeout)
+
+	// Teardown
+	server.Close()
+}
+
+func TestClient_CollectSyncNoRetry(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServer(http.StatusOK, stubs.CollectPending())
+	accessToken := "6B352110-4716-11ED-963F-0800200C9A66"
+	client := New(
+		WithBaseURL(server.URL),
+		WithAccessToken(accessToken),
+		WithCollectSyncVerifyRetryCount(0),
+		WithAccessSecret("1B875FB0-4717-11ED-963F-0800200C9A66"),
+	)
+	nonce := "95cdf110-4614-4d95-b6c2-f14fe01c4995"
+	params := &CollectParams{
+		QuoteID:               "15380e55-6227-4a25-8e1f-23c8735ce242",
+		CustomerPhoneNumber:   "697777777",
+		CustomerEmailAddress:  "dev@test.com",
+		ServiceNumber:         "697777777",
+		ExternalTransactionID: "999992624813740205",
+	}
+
+	// Act
+	transaction, response, err := client.CollectSync(
+		context.Background(),
+		params,
+		WithRequestNonce(nonce),
+	)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+	assert.Equal(t, params.ExternalTransactionID, *transaction.ExternalTransactionID)
+	assert.True(t, transaction.IsPending())
+	assert.Equal(t, "PENDING", transaction.Status)
+
+	// Teardown
+	server.Close()
+}
+
 func TestClient_Verify(t *testing.T) {
 	// Setup
 	t.Parallel()

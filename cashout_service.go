@@ -7,14 +7,14 @@ import (
 	"net/http"
 )
 
-// topupService is the API client for the `/topup` endpoint
-type topupService service
+// cashoutService is the API client for the `/cashout` endpoint
+type cashoutService service
 
-// GetPackages returns a list of all available topup packages.
+// Get returns a list of all available cashout packages.
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
-func (service *topupService) GetPackages(ctx context.Context, serviceID string, options ...RequestOption) ([]*PayItem, *Response, error) {
-	request, err := service.client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/topup?serviceid=%s", serviceID), nil)
+func (service *cashoutService) Get(ctx context.Context, serviceID string, options ...RequestOption) ([]*PayItem, *Response, error) {
+	request, err := service.client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/cashout?serviceid=%s", serviceID), nil)
 	if err != nil {
 		return nil, nil, err
 	}

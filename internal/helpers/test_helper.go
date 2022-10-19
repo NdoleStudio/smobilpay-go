@@ -19,6 +19,19 @@ func MakeTestServer(responseCode int, body []byte) *httptest.Server {
 	}))
 }
 
+// MakeTestServerWithMultipleResponses creates an api server for testing with multiple responses
+func MakeTestServerWithMultipleResponses(responseCode int, responses [][]byte) *httptest.Server {
+	count := 0
+	return httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(responseCode)
+		_, err := res.Write(responses[count])
+		if err != nil {
+			panic(err)
+		}
+		count++
+	}))
+}
+
 // MakeRequestCapturingTestServer creates an api server that captures the request object
 func MakeRequestCapturingTestServer(responseCode int, response []byte, request *http.Request) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(responseWriter http.ResponseWriter, req *http.Request) {
@@ -40,9 +53,4 @@ func MakeRequestCapturingTestServer(responseCode int, response []byte, request *
 			panic(err)
 		}
 	}))
-}
-
-// StringToPointer converts a string to a pointer
-func StringToPointer(value string) *string {
-	return &value
 }

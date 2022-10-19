@@ -3,6 +3,7 @@ package smobilpay
 import (
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -99,4 +100,34 @@ func TestWithAccessSecret(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, accessSecret, config.accessSecret)
+}
+
+func TestWithCollectSyncVerifyInterval(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	config := defaultClientConfig()
+	interval := time.Second * 2
+
+	// Act
+	WithCollectSyncVerifyInterval(interval).apply(config)
+
+	// Assert
+	assert.Equal(t, interval, config.collectSyncVerifyInterval)
+}
+
+func TestWithCollectSyncVerifyRetryCount(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	config := defaultClientConfig()
+	retryCount := uint(1000)
+
+	// Act
+	WithCollectSyncVerifyRetryCount(retryCount).apply(config)
+
+	// Assert
+	assert.Equal(t, retryCount, config.collectSyncVerifyRetryCount)
 }

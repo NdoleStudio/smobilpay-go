@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"sort"
@@ -30,8 +29,13 @@ type Client struct {
 	accessToken  string
 	accessSecret string
 
-	Topup *topupService
-	Bill  *billService
+	collectSyncVerifyInterval   time.Duration
+	collectSyncVerifyRetryCount uint
+
+	Topup   *topupService
+	Bill    *billService
+	Cashout *cashoutService
+	Cashin  *cashinService
 }
 
 // New creates and returns a new *Client from a slice of Option.
@@ -43,15 +47,20 @@ func New(options ...Option) *Client {
 	}
 
 	client := &Client{
-		httpClient:   config.httpClient,
-		accessToken:  config.accessToken,
-		accessSecret: config.accessSecret,
-		baseURL:      config.baseURL,
+		httpClient:                  config.httpClient,
+		accessToken:                 config.accessToken,
+		accessSecret:                config.accessSecret,
+		baseURL:                     config.baseURL,
+		collectSyncVerifyRetryCount: config.collectSyncVerifyRetryCount,
+		collectSyncVerifyInterval:   config.collectSyncVerifyInterval,
 	}
 
 	client.common.client = client
 	client.Topup = (*topupService)(&client.common)
 	client.Bill = (*billService)(&client.common)
+	client.Cashout = (*cashoutService)(&client.common)
+	client.Cashin = (*cashinService)(&client.common)
+
 	return client
 }
 
@@ -137,16 +146,27 @@ func (client *Client) CollectSync(ctx context.Context, params *CollectParams, op
 		return transaction, response, err
 	}
 
-	// wait for completion in 5 minutes
-	number := transaction.PaymentTransactionNumber
-	counter := 1
-	for {
-		time.Sleep(20 * time.Second)
-		transaction, response, err = client.Verify(ctx, number)
-		if err != nil || !transaction.IsPending() || ctx.Err() != nil || counter == 15 {
+	paymentTransactionNumber := transaction.PaymentTransactionNumber
+	for counter := uint(0); counter < client.collectSyncVerifyRetryCount; counter++ {
+		client.sleepWithContext(ctx, client.collectSyncVerifyInterval)
+		transaction, response, err = client.Verify(ctx, paymentTransactionNumber)
+		if err != nil || !transaction.IsPending() {
 			return transaction, response, err
 		}
 		counter++
+	}
+
+	return transaction, response, err
+}
+
+func (client *Client) sleepWithContext(ctx context.Context, d time.Duration) {
+	timer := time.NewTimer(d)
+	select {
+	case <-ctx.Done():
+		if !timer.Stop() {
+			<-timer.C
+		}
+	case <-timer.C:
 	}
 }
 
@@ -334,7 +354,7 @@ func (client *Client) do(req *http.Request) (*Response, error) {
 		return resp, err
 	}
 
-	_, err = io.Copy(ioutil.Discard, httpResponse.Body)
+	_, err = io.Copy(io.Discard, httpResponse.Body)
 	if err != nil {
 		return resp, err
 	}
@@ -351,7 +371,7 @@ func (client *Client) newResponse(httpResponse *http.Response) (*Response, error
 	resp := new(Response)
 	resp.HTTPResponse = httpResponse
 
-	buf, err := ioutil.ReadAll(resp.HTTPResponse.Body)
+	buf, err := io.ReadAll(resp.HTTPResponse.Body)
 	if err != nil {
 		return nil, err
 	}

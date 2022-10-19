@@ -46,6 +46,28 @@ func CollectOk() []byte {
 `)
 }
 
+// CollectPending returns the api response to the `/collectstd` endpoint for a pending transaction
+func CollectPending() []byte {
+	return []byte(`
+{
+   "ptn":"99999166542651400095315364801168",
+   "timestamp":"2022-10-10T18:28:34+00:00",
+   "agentBalance":"247000.00",
+   "receiptNumber":"999992624813740205",
+   "veriCode":"f20873",
+   "priceLocalCur":"1000.00",
+   "priceSystemCur":"1000.00",
+   "localCur":"XAF",
+   "systemCur":"XAF",
+   "trid": "999992624813740205",
+   "pin":null,
+   "status":"PENDING",
+   "payItemDescr":null,
+   "payItemId":"S-112-951-CMORANGE-20062-CM_ORANGE_VTU_CUSTOM-1"
+}
+`)
+}
+
 // VerifyOk returns the api response to the `/verifytx` endpoint
 func VerifyOk() []byte {
 	return []byte(`
@@ -63,6 +85,30 @@ func VerifyOk() []byte {
 	   "trid": "999992624813740205",
 	   "pin":null,
 	   "status":"SUCCESS",
+	   "payItemDescr":null,
+	   "payItemId":"S-112-951-CMORANGE-20062-CM_ORANGE_VTU_CUSTOM-1"
+	}
+]
+`)
+}
+
+// VerifyInProcess returns the api response to the `/verifytx` endpoint for an in process transaction
+func VerifyInProcess() []byte {
+	return []byte(`
+[
+	{
+	   "ptn":"99999166542651400095315364801168",
+	   "timestamp":"2022-10-10T18:28:34+00:00",
+	   "agentBalance":"247000.00",
+	   "receiptNumber":"999992624813740205",
+	   "veriCode":"f20873",
+	   "priceLocalCur":"1000.00",
+	   "priceSystemCur":"1000.00",
+	   "localCur":"XAF",
+	   "systemCur":"XAF",
+	   "trid": "999992624813740205",
+	   "pin":null,
+	   "status":"INPROCESS",
 	   "payItemDescr":null,
 	   "payItemId":"S-112-951-CMORANGE-20062-CM_ORANGE_VTU_CUSTOM-1"
 	}
