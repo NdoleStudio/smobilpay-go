@@ -10,7 +10,7 @@ import (
 // cashinService is the API client for the `/cashin` endpoint
 type cashinService service
 
-// Get returns a list of all available cashout packages.
+// Get cashin pay item
 //
 // https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html
 func (service *cashinService) Get(ctx context.Context, serviceID string, options ...RequestOption) ([]*PayItem, *Response, error) {

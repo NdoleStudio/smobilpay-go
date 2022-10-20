@@ -38,6 +38,10 @@ import "github.com/NdoleStudio/smobilpay-go"
   - `GET /bill`: Get details of a bill
 - **Topup**
   - `GET /topup`: Get available topup packages.
+- **Cashin**
+  - `GET /cashin`: Get cashin pay item.
+- **Cashout**
+  - `GET /cashout`: Get Cashout pay item.
 
 ## Usage
 
