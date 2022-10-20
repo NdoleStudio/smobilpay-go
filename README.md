@@ -53,14 +53,14 @@ An instance of the client can be created using `New()`.
 package main
 
 import (
-	"github.com/NdoleStudio/smobilpay-go"
+    "github.com/NdoleStudio/smobilpay-go"
 )
 
 func main()  {
-  client := smobilpay.New(
-    smobilpay.WithAccessToken(accessToken),
-    smobilpay.WithAccessSecret(accessSecret),
-  )
+    client := smobilpay.New(
+        smobilpay.WithAccessToken(accessToken),
+        smobilpay.WithAccessSecret(accessSecret),
+    )
 }
 ```
 
