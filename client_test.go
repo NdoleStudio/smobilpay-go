@@ -144,7 +144,7 @@ func TestClient_Quote(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 	assert.Equal(t, payItemID, quote.PayItemID)
-	assert.Equal(t, 100, quote.PriceSystemCurrency)
+	assert.Equal(t, float64(100), quote.PriceSystemCurrency)
 
 	// Teardown
 	server.Close()
