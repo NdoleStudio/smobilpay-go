@@ -42,6 +42,8 @@ import "github.com/NdoleStudio/smobilpay-go"
   - `GET /cashin`: Get cashin pay item.
 - **Cashout**
   - `GET /cashout`: Get Cashout pay item.
+- **Product**
+  - `GET /product`: Get product pay items.
 
 ## Usage
 
