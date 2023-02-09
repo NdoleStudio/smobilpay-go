@@ -31,8 +31,8 @@ type Quote struct {
 	ExpiresAt           time.Time   `json:"expiresAt"`
 	PayItemID           string      `json:"payItemId"`
 	AmountLocalCurrency string      `json:"amountLocalCur"`
-	PriceLocalCurrency  float64     `json:"priceLocalCur"`
-	PriceSystemCurrency float64     `json:"priceSystemCur"`
+	PriceLocalCurrency  string      `json:"priceLocalCur"`
+	PriceSystemCurrency string      `json:"priceSystemCur"`
 	LocalCurrency       string      `json:"localCur"`
 	SystemCurrency      string      `json:"systemCur"`
 	Promotion           interface{} `json:"promotion"`
