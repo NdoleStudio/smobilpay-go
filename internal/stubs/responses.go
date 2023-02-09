@@ -124,8 +124,8 @@ func QuoteOk() []byte {
    "expiresAt":"2022-10-15T13:32:53+00:00",
    "payItemId":"S-112-951-CMORANGE-20062-CM_ORANGE_VTU_CUSTOM-1",
    "amountLocalCur":"100.00",
-   "priceLocalCur":100,
-   "priceSystemCur":100,
+   "priceLocalCur":"100",
+   "priceSystemCur":"100",
    "localCur":"XAF",
    "systemCur":"XAF",
    "promotion":null
