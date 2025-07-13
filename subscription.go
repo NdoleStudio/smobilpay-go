@@ -18,7 +18,7 @@ type Subscription struct {
 	AmountType         string  `json:"amountType"`
 	Name               string  `json:"name"`
 	LocalCur           string  `json:"localCur"`
-	AmountLocalCur     int     `json:"amountLocalCur"`
+	AmountLocalCur     string  `json:"amountLocalCur"`
 	CustomerReference  string  `json:"customerReference"`
 	CustomerName       string  `json:"customerName"`
 	CustomerNumber     string  `json:"customerNumber"`
