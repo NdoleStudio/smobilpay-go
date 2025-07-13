@@ -36,6 +36,8 @@ import "github.com/NdoleStudio/smobilpay-go"
   - `POST /collectstd`: Confirms a transaction
 - **Bill**
   - `GET /bill`: Get details of a bill
+- **Subscription**
+  - `GET /subscription`: Get subscription pay items.
 - **Topup**
   - `GET /topup`: Get available topup packages.
 - **Cashin**

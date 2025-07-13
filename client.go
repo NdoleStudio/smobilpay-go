@@ -32,11 +32,12 @@ type Client struct {
 	collectSyncVerifyInterval   time.Duration
 	collectSyncVerifyRetryCount uint
 
-	Topup   *topupService
-	Bill    *billService
-	Cashout *cashoutService
-	Cashin  *cashinService
-	Product *productService
+	Topup        *topupService
+	Bill         *billService
+	Cashout      *cashoutService
+	Cashin       *cashinService
+	Product      *productService
+	Subscription *subscriptionService
 }
 
 // New creates and returns a new *Client from a slice of Option.
@@ -63,6 +64,7 @@ func New(options ...Option) *Client {
 	client.Cashout = (*cashoutService)(&client.common)
 	client.Cashin = (*cashinService)(&client.common)
 	client.Product = (*productService)(&client.common)
+	client.Subscription = (*subscriptionService)(&client.common)
 
 	return client
 }
@@ -260,6 +262,7 @@ func (client *Client) newRequest(ctx context.Context, options []RequestOption, m
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("x-api-version", "3.0.5")
 	req.Header.Set("Authorization", client.getAuthHeader(req, config, client.authPayload(req, body)))
 
 	return req, nil
