@@ -13,7 +13,7 @@ func SubscriptionGet() []byte {
     "amountType": "FIXED",
     "name": "string",
     "localCur": "str",
-    "amountLocalCur": 0,
+    "amountLocalCur": "0.0",
     "customerReference": "string",
     "customerName": "string",
     "customerNumber": "string",
