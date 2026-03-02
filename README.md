@@ -46,6 +46,9 @@ import "github.com/NdoleStudio/smobilpay-go"
   - `GET /cashout`: Get Cashout pay item.
 - **Product**
   - `GET /product`: Get product pay items.
+- **Service**
+  - `GET /service`: Get the list of supported services.
+  - `GET /service/{id}`: Get a single service by ID.
 
 ## Usage
 

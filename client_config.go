@@ -19,6 +19,6 @@ func defaultClientConfig() *clientConfig {
 		httpClient:                  http.DefaultClient,
 		collectSyncVerifyInterval:   20 * time.Second,
 		collectSyncVerifyRetryCount: 15,
-		baseURL:                     "https://s3p.smobilpay.staging.maviance.info/v2",
+		baseURL:                     "https://s3pv2cm.smobilpay.com/v2",
 	}
 }

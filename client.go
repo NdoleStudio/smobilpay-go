@@ -38,6 +38,7 @@ type Client struct {
 	Cashin       *cashinService
 	Product      *productService
 	Subscription *subscriptionService
+	Service      *serviceService
 }
 
 // New creates and returns a new *Client from a slice of Option.
@@ -65,6 +66,7 @@ func New(options ...Option) *Client {
 	client.Cashin = (*cashinService)(&client.common)
 	client.Product = (*productService)(&client.common)
 	client.Subscription = (*subscriptionService)(&client.common)
+	client.Service = (*serviceService)(&client.common)
 
 	return client
 }
