@@ -2,11 +2,12 @@ package smobilpay
 
 import (
 	"context"
+	"net/http"
+	"testing"
+
 	"github.com/NdoleStudio/smobilpay-go/internal/helpers"
 	"github.com/NdoleStudio/smobilpay-go/internal/stubs"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"testing"
 )
 
 func TestSubscriptionService_Get(t *testing.T) {

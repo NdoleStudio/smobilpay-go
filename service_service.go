@@ -25,7 +25,6 @@ func (service *serviceService) GetAll(ctx context.Context, options ...RequestOpt
 	}
 
 	var services []*Service
-	fmt.Printf("%s", string(*response.Body))
 	if err = json.Unmarshal(*response.Body, &services); err != nil {
 		return nil, response, err
 	}
