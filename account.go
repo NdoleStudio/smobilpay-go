@@ -12,6 +12,6 @@ type Account struct {
 	CompanyName        string  `json:"companyName"`
 	CompanyAddress     string  `json:"companyAddress"`
 	CompanyPhonenumber string  `json:"companyPhonenumber"`
-	LimitMax           float64 `json:"limitMax"`
+	LimitMax           string  `json:"limitMax"`
 	LimitRemaining     float64 `json:"limitRemaining"`
 }

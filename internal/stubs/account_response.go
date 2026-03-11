@@ -4,18 +4,18 @@ package stubs
 func AccountGet() []byte {
 	return []byte(`
 {
-    "balance": 234500.00,
+    "balance": 417986.82,
     "currency": "XAF",
-    "key": "6B352110-4716-11ED-963F-0800200C9A66",
-    "agentId": "AGT-001-00234",
-    "agentName": "John Doe",
-    "agentAddress": "123 Main Street, Douala",
-    "agentPhonenumber": "237699999999",
-    "companyName": "Acme Payments Ltd",
-    "companyAddress": "456 Business Ave, Yaounde",
-    "companyPhonenumber": "237677777777",
-    "limitMax": 5000000.00,
-    "limitRemaining": 4765500.00
+    "key": "B835273F-0709-AE0C-E01D-B3411C452EEF",
+    "agentId": "CM10714-38167",
+    "agentName": "ACME S3P AGENT",
+    "agentAddress": "Adjacent hospital of Buea ",
+    "agentPhonenumber": "(+237) 673658376",
+    "companyName": "ACME LTD",
+    "companyAddress": "Adjacent Apostolic church Buea,526,Buea",
+    "companyPhonenumber": "(+237) 673658376",
+    "limitRemaining": 8950428,
+    "limitMax": "10000000.00"
 }
 `)
 }
