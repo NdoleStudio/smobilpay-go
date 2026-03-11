@@ -44,7 +44,7 @@ func TestAccountService_Get(t *testing.T) {
 	assert.Equal(t, "Adjacent Apostolic church Buea,526,Buea", account.CompanyAddress)
 	assert.Equal(t, "(+237) 673658376", account.CompanyPhonenumber)
 	assert.Equal(t, "10000000.00", account.LimitMax)
-	assert.Equal(t, float64(8950428), account.LimitRemaining)
+	assert.Equal(t, 8950428.00, account.LimitRemaining)
 
 	// Teardown
 	server.Close()
