@@ -49,6 +49,8 @@ import "github.com/NdoleStudio/smobilpay-go"
 - **Service**
   - `GET /service`: Get the list of supported services.
   - `GET /service/{id}`: Get a single service by ID.
+- **Account**
+  - `GET /account`: Get account information and remaining balance.
 
 ## Usage
 
