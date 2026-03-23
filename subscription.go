@@ -28,3 +28,10 @@ type Subscription struct {
 	OptionalString     *string `json:"optStrg"`
 	OptionalNumber     *int    `json:"optNmb"`
 }
+
+// Token represents a prepaid token returned by the API
+type Token struct {
+	PaymentTransactionNumber string `json:"ptn"`
+	Pin                      string `json:"pin"`
+	Name                     string `json:"name"`
+}

@@ -43,3 +43,32 @@ func TestSubscriptionService_Get(t *testing.T) {
 	// Teardown
 	server.Close()
 }
+
+func TestSubscriptionService_GetToken(t *testing.T) {
+	// Setup
+	t.Parallel()
+
+	// Arrange
+	server := helpers.MakeTestServer(http.StatusOK, stubs.SubscriptionGetToken())
+	accessToken := "6B352110-4716-11ED-963F-0800200C9A66"
+	client := New(
+		WithBaseURL(server.URL),
+		WithAccessToken(accessToken),
+		WithAccessSecret("1B875FB0-4717-11ED-963F-0800200C9A66"),
+	)
+	nonce := "95cdf110-4614-4d95-b6c2-f14fe01c4995"
+	ptn := "99999166542651400095315364801168"
+
+	// Act
+	token, response, err := client.Subscription.GetToken(context.Background(), ptn, WithRequestNonce(nonce))
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+	assert.Equal(t, ptn, token.PaymentTransactionNumber)
+	assert.Equal(t, "5283-8650-4728-9049-6326", token.Pin)
+	assert.Equal(t, "ENEO PREPAID", token.Name)
+
+	// Teardown
+	server.Close()
+}

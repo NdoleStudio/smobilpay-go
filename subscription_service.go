@@ -42,3 +42,25 @@ func (service *subscriptionService) Get(ctx context.Context, params *Subscriptio
 
 	return services, response, nil
 }
+
+// GetToken returns a prepaid token for a given payment transaction number
+//
+// https://apidocs.smobilpay.com/s3papi/API-Reference.2066448558.html#APIReference-Specification
+func (service *subscriptionService) GetToken(ctx context.Context, ptn string, options ...RequestOption) (*Token, *Response, error) {
+	request, err := service.client.newRequest(ctx, options, http.MethodGet, fmt.Sprintf("/subscription/token?ptn=%s", url.QueryEscape(ptn)), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, err := service.client.do(request)
+	if err != nil {
+		return nil, response, err
+	}
+
+	var token Token
+	if err = json.Unmarshal(*response.Body, &token); err != nil {
+		return nil, response, err
+	}
+
+	return &token, response, nil
+}
