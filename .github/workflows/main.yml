@@ -18,7 +18,7 @@ jobs:
           go-version-file: go.mod
 
       - name: Golang CI Lint
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v9
 
   Test:
     runs-on: ubuntu-latest
